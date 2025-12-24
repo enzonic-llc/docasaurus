@@ -91,14 +91,24 @@ export async function processTask(taskId) {
 
             // Update progress
             const completedCount = task.chunks.filter(c => c.status === 'completed').length;
-            task.progress = Math.round((completedCount / task.totalChunks) * 100);
+            const total = Math.max(task.totalChunks, task.chunks.length, 1);
+            task.progress = Math.round((completedCount / total) * 100);
+
+            logger.info('PROCESSOR', `Task ${taskId} update: ${completedCount}/${total} chunks done. Progress: ${task.progress}%`);
+
+            // Ensure status updates if all chunks are done
+            if (completedCount === total) {
+                task.status = 'completed';
+                task.results = task.chunks.map(c => c.result);
+                logger.info('PROCESSOR', `Task ${taskId} fully completed during chunk update`);
+            }
+
             await db.write();
-            logger.info('PROCESSOR', `Task ${taskId} progress: ${task.progress}%`);
         }));
     }
 
     const failedCount = task.chunks.filter(c => c.status === 'failed').length;
-    if (failedCount === 0) {
+    if (failedCount === 0 && task.status !== 'completed') { // Add check for task.status to avoid overwriting if already completed
         task.status = 'completed';
         logger.info('PROCESSOR', `Task ${taskId} completed all chunks`);
         // Final assemble

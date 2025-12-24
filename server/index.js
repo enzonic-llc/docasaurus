@@ -23,7 +23,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const upload = multer({ dest: 'uploads/' });
+const uploadDir = 'uploads/';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+    logger.info('SERVER', `Created directory: ${uploadDir}`);
+}
+const upload = multer({ dest: uploadDir });
 
 const PORT = process.env.PORT || 5000;
 
@@ -31,8 +36,8 @@ const PORT = process.env.PORT || 5000;
 await initDb();
 resumeTasks();
 
-app.listen(PORT, () => {
-    logger.info('SERVER', `Server running on port ${PORT}`);
+app.listen(PORT, '127.0.0.1', () => {
+    logger.info('SERVER', `Server running on 127.0.0.1:${PORT} (Internal only)`);
 });
 
 app.post('/api/upload', upload.single('pdf'), async (req, res) => {

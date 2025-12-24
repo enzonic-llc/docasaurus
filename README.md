@@ -25,7 +25,7 @@
 
 1. **Clone the repository**:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/enzonic-llc/docasaurus
    cd docasaurus
    ```
 
@@ -42,8 +42,8 @@
    ```
    Edit `.env`:
    - `OPENAI_API_KEY`: Your secret key.
-   - `OPENAI_COMPLETIONS_URL`: Set to `https://llm.chutes.ai/v1/chat/completions` for Chutes.ai or the standard OpenAI URL.
-   - `MODEL_ID`: e.g., `zai-org/GLM-4.6-TEE` or `gpt-4o`.
+   - `OPENAI_COMPLETIONS_URL`: Set to any OpenAI compatible endpoint or the standard OpenAI URL.
+   - `MODEL_ID`: e.g., `gpt4o` or any model the api supports
 
 ### Running the App
 

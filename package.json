@@ -2,13 +2,18 @@
     "name": "enzonic-docasaurus",
     "version": "1.0.0",
     "private": true,
+    "workspaces": [
+        "client",
+        "server"
+    ],
     "scripts": {
-        "server": "cd server && node --watch index.js",
-        "client": "cd client && npm run dev",
-        "dev": "concurrently \"npm run server\" \"npm run client\"",
-        "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+        "server": "npm run dev --workspace=server",
+        "client": "npm run dev --workspace=client",
+        "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run client\"",
+        "build": "npm run build --workspace=client"
     },
     "devDependencies": {
-        "concurrently": "^8.2.2"
+        "concurrently": "^8.2.2",
+        "cross-env": "^7.0.3"
     }
 }
